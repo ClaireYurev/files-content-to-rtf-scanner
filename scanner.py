@@ -51,6 +51,10 @@ def scan_and_write_to_rtf(output_file):
                 if file in excluded_files or should_exclude(os.path.join(root, file), gitignore_patterns):
                     continue
 
+                # Exclude output files that match the pattern "output*.rtf"
+                if file.startswith("output") and file.endswith(".rtf"):
+                    continue
+
                 file_path = os.path.join(root, file)
                 relative_path = os.path.relpath(file_path, os.getcwd())
 
