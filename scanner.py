@@ -13,8 +13,10 @@ def read_gitignore():
     return gitignore_files
 
 def should_exclude(path, excluded_patterns):
+    abs_path = os.path.abspath(path)
     for pattern in excluded_patterns:
-        if os.path.commonpath([path, pattern]) == pattern or path.endswith(pattern):
+        abs_pattern = os.path.abspath(pattern)
+        if os.path.commonpath([abs_path, abs_pattern]) == abs_pattern or abs_path.endswith(abs_pattern):
             return True
     return False
 
