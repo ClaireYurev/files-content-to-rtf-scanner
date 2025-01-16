@@ -20,6 +20,17 @@ def should_exclude(path, excluded_patterns):
             return True
     return False
 
+def get_unique_output_filename(base_name):
+    for i in range(1000):
+        if i == 0:
+            filename = base_name
+        else:
+            filename = f"{os.path.splitext(base_name)[0]}-{i}{os.path.splitext(base_name)[1]}"
+        if not os.path.exists(filename):
+            return filename
+    print("Max output file limit reached! Overwrote output-1.rtf")
+    return f"{os.path.splitext(base_name)[0]}-1{os.path.splitext(base_name)[1]}"
+
 def scan_and_write_to_rtf(output_file):
     excluded_files = {"package-lock.json", "README.md", ".gitignore"}
     excluded_dirs = {"node_modules", ".git"}
@@ -28,6 +39,8 @@ def scan_and_write_to_rtf(output_file):
     gitignore_patterns = read_gitignore()
 
     scanned_files = []
+
+    output_file = get_unique_output_filename(output_file)
 
     with open(output_file, "w", encoding="utf-8") as rtf_file:
         for root, dirs, files in os.walk(os.getcwd()):
