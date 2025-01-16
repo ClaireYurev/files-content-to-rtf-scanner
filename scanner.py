@@ -27,6 +27,8 @@ def scan_and_write_to_rtf(output_file):
     # Include patterns from .gitignore
     gitignore_patterns = read_gitignore()
 
+    scanned_files = []
+
     with open(output_file, "w", encoding="utf-8") as rtf_file:
         for root, dirs, files in os.walk(os.getcwd()):
             # Exclude directories from .gitignore and predefined excluded_dirs
@@ -47,8 +49,18 @@ def scan_and_write_to_rtf(output_file):
                     rtf_file.write(f"// Contents of \"{relative_path}\"\n")
                     rtf_file.write(contents)
                     rtf_file.write("\n\n")
+
+                    # Add to scanned files list
+                    scanned_files.append(relative_path)
                 except (UnicodeDecodeError, PermissionError) as e:
                     print(f"Skipping file {relative_path} due to error: {e}")
+
+    # Print scanned files to console
+    for scanned_file in scanned_files:
+        print(f"Scanned and added: {scanned_file}")
+
+    # Print summary
+    print(f"Scanned and added {len(scanned_files)} files to {output_file}.")
 
 if __name__ == "__main__":
     output_filename = "output.rtf"
